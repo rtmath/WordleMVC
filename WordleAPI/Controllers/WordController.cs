@@ -7,13 +7,11 @@ namespace WordleAPI.Controllers
     [ApiController]
     public class WordController : ControllerBase
     {
-
         private readonly ApplicationDbContext _context;
         public WordController(ApplicationDbContext context)
         {
             _context = context;
         }
-
 
         [HttpGet]
         public IActionResult GetAll()
@@ -25,12 +23,12 @@ namespace WordleAPI.Controllers
         [HttpPost("{id}")]
         public IActionResult CheckWord([FromRoute] int id, [FromBody] string guess)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (guess.Length != 5) { return BadRequest(); }
 
-            return Ok();
+            var word = _context.Words.SingleOrDefault(x => x.Id == id);
+            if (word == null) { return NotFound(); }
+
+            return Ok(word.CompareWith(guess));
         }
     }
 }
