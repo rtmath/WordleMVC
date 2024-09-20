@@ -1,6 +1,7 @@
 ﻿"use strict";
 
 (() => {
+    let correctWordID = 0;
     let guess = "";
     let keyboard_buttons = document.querySelectorAll(".keyboard-btn");
 
@@ -21,7 +22,17 @@
 
     function handleEnter() {
         if (guess.length == 5) {
-            console.log(`Submitting guess ${guess}`);
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status == 200) {
+                    console.log(this.responseText);
+                }
+            }
+
+            xhr.open('POST', '/Main/CheckGuess');
+            xhr.setRequestHeader("Content-Type", "text/json");
+            xhr.send(JSON.stringify({ "id": correctWordID, "guess": guess }));
+
             guess = "";
         }
     }
@@ -37,4 +48,23 @@
             active_guess_slots[i].innerHTML = guess[i] || "";
         }
     }
+
+    function retrieveWordID() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status == 200) {
+                console.log(this.responseText);
+                correctWordID = parseInt(this.responseText);
+            }
+        }
+
+        xhr.open('GET', '/Main/RetrieveWordID');
+        xhr.send();
+    }
+
+    function onPageLoad() {
+        retrieveWordID();
+    }
+
+    onPageLoad();
 })();
