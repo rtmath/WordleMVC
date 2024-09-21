@@ -7,10 +7,10 @@
         ExactPosition = 2
     };
 
-    public class Word
+    public class WordModel
     {
         public int Id { get; set; }
-        public string Chars { get; set; } = "";
+        public string Chars { get; set; } = String.Empty;
 
         public int[] CompareWith(string guess)
         {

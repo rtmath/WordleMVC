@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WordleAPI.Data;
+using WordleAPI.Models;
 
 namespace WordleAPI.Controllers
 {
@@ -14,21 +15,21 @@ namespace WordleAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult WordID()
         {
             var words = _context.Words.ToList();
-            return Ok(words);
+            return Ok(words[DateTime.Now.Day % words.Count].Id);
         }
 
-        [HttpPost("{id}")]
-        public IActionResult CheckWord([FromRoute] int id, [FromBody] string guess)
+        [HttpPost]
+        public IActionResult CheckWord([FromBody] GuessModel guessModel)
         {
-            if (guess.Length != 5) { return BadRequest(); }
+            if (guessModel.Guess.Length != 5) { return BadRequest(); }
 
-            var word = _context.Words.SingleOrDefault(x => x.Id == id);
+            var word = _context.Words.SingleOrDefault(x => x.Id == guessModel.CorrectWordID);
             if (word == null) { return NotFound(); }
 
-            return Ok(word.CompareWith(guess));
+            return Ok(word.CompareWith(guessModel.Guess));
         }
     }
 }

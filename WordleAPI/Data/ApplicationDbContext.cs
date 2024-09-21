@@ -11,6 +11,6 @@ namespace WordleAPI.Data
             
         }
 
-        public DbSet<Word> Words { get; set; }
+        public DbSet<WordModel> Words { get; set; }
     }
 }
