@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
 using WordleMVC.Models;
 
 namespace WordleMVC.Controllers
@@ -26,22 +28,21 @@ namespace WordleMVC.Controllers
         }
 
         [HttpGet]
-        public int RetrieveWordID()
+        public async Task<int> RetrieveWordID()
         {
-            /* To be implemented */
+            var response = await _client.GetAsync("http://localhost:5272/api/word");
 
-            return 1;
+            bool succeeded = int.TryParse(await response.Content.ReadAsStringAsync(), out int i);
+            return (succeeded) ? i : 0;
         }
 
         [HttpPost]
-        public async Task<string?> CheckGuess([FromBody] int id, [FromBody] string guess)
+        public async Task<string?> CheckGuess([FromBody] GuessModel guessModel)
         {
-            Console.WriteLine(id);
-            Console.WriteLine(guess);
-            HttpRequestMessage msg = new HttpRequestMessage();
-            msg.Method = HttpMethod.Get;
-            msg.RequestUri = new Uri("http://localhost:5272/api/word");
-            var response = _client.Send(msg);
+            var response = await _client.PostAsync(
+                "http://localhost:5272/api/word/",
+                new StringContent(JsonSerializer.Serialize(guessModel), Encoding.UTF8, "application/json")
+            );
 
             return await response.Content.ReadAsStringAsync();
         }
