@@ -1,8 +1,9 @@
 ﻿"use strict";
 
 (() => {
-    let correctWordID = 0;
+    let correct_word_id = 0;
     let guess = "";
+    let guess_evaluation = [];
     let keyboard_buttons = document.querySelectorAll(".keyboard-btn");
 
     keyboard_buttons.forEach((btn) => {
@@ -21,17 +22,17 @@
     }
 
     function handleEnter() {
-        if (guess.length == 5) {
+        if (guess.length == 5 && correct_word_id > 0) {
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status == 200) {
-                    console.log(this.responseText);
+                    guess_evaluation = stringToArray(this.responseText);
                 }
             }
 
-            xhr.open('POST', '/Main/CheckGuess');
-            xhr.setRequestHeader("Content-Type", "text/json");
-            xhr.send(JSON.stringify({ "id": correctWordID, "guess": guess }));
+            xhr.open('POST', '/Main/CheckGuess/');
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify({ 'correctWordID': correct_word_id, 'guess': guess }));
 
             guess = "";
         }
@@ -39,6 +40,11 @@
 
     function handleCharacter(character) {
         if (guess.length < 5) guess += character;
+    }
+
+    function stringToArray(str) {
+        // str is in format "[0,0,0,0,0]"
+        return str.substring(1, str.length - 1).split(',').map(x => parseInt(x));
     }
 
     function populateGuess() {
@@ -53,8 +59,7 @@
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (this.readyState === 4 && this.status == 200) {
-                console.log(this.responseText);
-                correctWordID = parseInt(this.responseText);
+                correct_word_id = parseInt(this.responseText);
             }
         }
 
