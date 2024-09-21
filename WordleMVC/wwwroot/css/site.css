@@ -54,6 +54,7 @@ body {
     width: 50px;
     height: 50px;
     line-height: 50px;
+    color: white;
 }
 
 .keyboard-container {
@@ -71,4 +72,32 @@ body {
 
 .keyboard-btn { 
     min-width: 50px;
+}
+
+.exact-match {
+    background-color: green;
+}
+
+.partial-match {
+    background-color: goldenrod;
+}
+
+.no-match {
+    background-color: dimgrey;
+}
+
+.victory-anim {
+    animation-name: victory;
+    animation-duration: 1s;
+}
+
+@keyframes victory {
+    from {
+        transform: rotate(0deg);
+        scale: 200%;
+    }
+    to {
+        transform: rotate(360deg);
+        scale: 100%;
+    }
 }
