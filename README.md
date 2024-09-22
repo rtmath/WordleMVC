@@ -1,4 +1,6 @@
 # WordleMVC
+![screenshot](https://github.com/user-attachments/assets/e22ec68d-4b8b-4a67-8e8c-8fa7365dead4)
+
 This is a clone of Wordle implemented in C# ASP.NET MVC, with an additional RESTful WebAPI back-end.
 
 The inclusion of the API back-end (or any back-end at all) is completely unnecessary for a project this simple; it is merely to demonstrate the establishment of a clear boundary between the UI and data layers.
